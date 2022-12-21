@@ -60,47 +60,45 @@ def get_gene_name(query_input: str):
     return results[0]['external_name']
 
 
-# Open file, this will read in the header
+# Open the input file, this will read in the header
 reader = vcfpy.Reader.from_path('./data/small_test_vcf_data.txt')
 line_count = 0
 
-# The output will be a list of lines
-# Build header and save to the output variable
-header = ['#CHROM', 'POS', 'TC', 'TR', 'Most_Severe_Consequence', 'Gene_Name']
-output = [header]
+# open the output file
+with open('output.csv', 'w', newline='') as csvfile:
+    csvwriter = csv.writer(csvfile)
 
-# read through the VCF file and print out info that we want
-for record in reader:
+    # Build header and write to file
+    header = ['#CHROM', 'POS', 'TC', 'TR', 'Most_Severe_Consequence', 'Gene_Name']
+    csvwriter.writerow(header)
 
-    api_query_string_for_consequences = f"{record.CHROM}:{record.POS}-{record.POS}/{record.ALT[0].value}"
+    # read through the VCF file and extract the info that we are looking for
+    for record in reader:
 
-    most_severe_consequence = 'none_found'
+        api_query_string_for_consequences = f"{record.CHROM}:{record.POS}-{record.POS}/{record.ALT[0].value}"
+        most_severe_consequence = 'none_found'
 
-    try:
-        most_severe_consequence = get_consequence_terms(api_query_string_for_consequences)
-    except Exception:
-        # endpoint did not return a most severe consequence
-        pass
+        try:
+            most_severe_consequence = get_consequence_terms(api_query_string_for_consequences)
+        except Exception:
+            # endpoint did not return a most severe consequence
+            pass
 
-    api_query_string_for_gene = f"{record.CHROM}:{record.POS}-{record.POS}"
-    gene_name = 'none_found'
+        api_query_string_for_gene = f"{record.CHROM}:{record.POS}-{record.POS}"
+        gene_name = 'none_found'
 
-    try:
-        gene_name = get_gene_name(api_query_string_for_gene)
-    except Exception as err:
-        # endpoint did not return a gene name
-        pass
+        try:
+            gene_name = get_gene_name(api_query_string_for_gene)
+        except Exception as err:
+            # endpoint did not return a gene name
+            pass
 
-    line = [record.CHROM, record.POS, record.INFO['TC'], record.INFO['TR'], most_severe_consequence, gene_name]
-    output = output + [line]
+        line = [record.CHROM, record.POS, record.INFO['TC'], record.INFO['TR'], most_severe_consequence, gene_name]
 
-    line_count += 1
+        # make sure everything is a string for outputting
+        line = [str(i) for i in line]
+        csvwriter.writerow(line)
 
-logging.info("Processed %i lines.", line_count)
+        line_count += 1
 
-# print(output)
-
-# now we are done parsing the file, let's print the output to a CSV
-with open('output.csv', 'w') as f:
-    write = csv.writer(f)
-    write.writerows(output)
+    logging.info("Processed %i lines.", line_count)
