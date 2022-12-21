@@ -48,6 +48,14 @@ python3.9 annotate.py -i ./data/test_vcf_data.txt -o output.csv
 deactivate
 ```
 
+# Improvements we could make
+
+1. There is probably a way to reduce the number of API calls we are making (maybe 
+by querying the API with a larger genomic range?). This would likely speed up
+the application because API calls can be slow.
+2. We could add tests that will make our application more robust.
+3. We could ship the application in a docker container, thus ensuring a 
+more reproducible environment.
 
 
 
