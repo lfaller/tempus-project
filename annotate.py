@@ -6,6 +6,16 @@ import requests
 import vcfpy
 
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("debug.log"),
+        logging.StreamHandler()
+    ]
+)
+
+
 ENSEMBL_SERVER = "https://rest.ensembl.org"
 
 
@@ -16,13 +26,13 @@ def get_consequence_terms(query_input: str):
     https://rest.ensembl.org/documentation/info/vep_region_get
 
     """
-    logging.info("Consequence terms query: ", query_input)
+    logging.info("Consequence terms query: %s", query_input)
     ext = f"/vep/human/region/{query_input}?"
 
     r = requests.get(ENSEMBL_SERVER + ext, headers={"Content-Type": "application/json"})
 
     if not r.ok:
-        logging.error("Status for query was: ", r.status_code[0])
+        logging.error("Status for query was: %s", r.status_code[0])
         r.raise_for_status()
 
     # the results are a list of dicts that we can parse
@@ -41,13 +51,13 @@ def get_gene_name(query_input: str):
     Note: modified in part from code found here:
     https://rest.ensembl.org/documentation/info/overlap_region
     """
-    logging.info("Gene name query: ", query_input)
+    logging.info("Gene name query: %s", query_input)
     ext = f"/overlap/region/human/{query_input}?feature=gene;feature=transcript;feature=cds;feature=exon"
 
     r = requests.get(ENSEMBL_SERVER + ext, headers={"Content-Type": "application/json"})
 
     if not r.ok:
-        logging.error("Status for query was: ", r.status_code[0])
+        logging.error("Status for query was: %s", r.status_code[0])
         r.raise_for_status()
 
     # the results are a list of dicts that we can parse
