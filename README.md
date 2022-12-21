@@ -27,7 +27,25 @@ source my_env/bin/activate
 # install the packages
 pip install -r requirements_dev.txt
 
-python3.9 annotate.py
+# query the help documentation
+python3.9 annotate.py -h
+usage: annotate.py [-h] [-i INPUT] [-o OUTPUT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Path to the input VCF file
+  -o OUTPUT, --output OUTPUT
+                        Name of the output CSV file
+
+# run the program with a small input dataset
+python3.9 annotate.py -i ./data/small_test_vcf_data.txt -o small_output.csv
+
+# run the program with the large dataset that was provided
+python3.9 annotate.py -i ./data/test_vcf_data.txt -o output.csv
+
+# deactivate the virtualenv
+deactivate
 ```
 
 
