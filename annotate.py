@@ -1,5 +1,6 @@
 # python3 annotate.py test_vcf_data.txt
 
+import argparse
 import csv
 import logging
 import requests
@@ -17,6 +18,14 @@ logging.basicConfig(
 
 
 ENSEMBL_SERVER = "https://rest.ensembl.org"
+
+
+# set up command line arguments
+argParser = argparse.ArgumentParser()
+argParser.add_argument("-i", "--input", help="Path to the input VCF file")
+argParser.add_argument("-o", "--output", help="Name of the output CSV file")
+
+args = argParser.parse_args()
 
 
 def get_consequence_terms(query_input: str):
@@ -71,11 +80,11 @@ def get_gene_name(query_input: str):
 
 
 # Open the input file, this will read in the header
-reader = vcfpy.Reader.from_path('./data/small_test_vcf_data.txt')
+reader = vcfpy.Reader.from_path(args.input)
 line_count = 0
 
 # open the output file
-with open('output.csv', 'w', newline='') as csvfile:
+with open(args.output, 'w', newline='') as csvfile:
     csvwriter = csv.writer(csvfile)
 
     # Build header and write to file
