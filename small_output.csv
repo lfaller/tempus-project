@@ -1,0 +1,7 @@
+#CHROM,POS,TC,TR,Most_Severe_Consequence,Gene_Name
+1,1158631,160,[156],intergenic_variant,None
+1,1246004,152,[148],none_found,C1QTNF12
+1,1249187,137,[135],upstream_gene_variant,None
+1,1261824,136,[134],intron_variant,UBE2J2
+1,1387667,137,[133],intron_variant,CCNL2
+1,1585597,264,[123],none_found,None
